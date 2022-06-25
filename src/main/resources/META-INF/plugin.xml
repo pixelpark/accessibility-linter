@@ -9,6 +9,10 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.MyProjectService"/>
+        <externalAnnotator
+                language="HTML"
+                implementationClass="com.github.bucherfa.accessibilitylinter.annotators.HtmlAnnotator"
+        />
     </extensions>
 
     <applicationListeners>
