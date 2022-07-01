@@ -1,6 +1,7 @@
 package com.github.bucherfa.accessibilitylinter.annotators
 
 import com.github.bucherfa.accessibilitylinter.AccessibilityLinterUtil
+import com.github.bucherfa.accessibilitylinter.services.LinterService
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.util.ExecUtil
 import com.intellij.lang.annotation.AnnotationHolder
@@ -12,33 +13,27 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import java.io.File
 import java.nio.charset.Charset
+import com.intellij.javascript.nodejs.npm.NpmManager
+import com.intellij.openapi.components.ServiceManager
 
-class CollectedInformation(val temporaryFilePath: String, val file: PsiFile)
+class CollectedInformation(val file: PsiFile)
 class CustomAnnotation(val range: TextRange, val message: String) {
 }
 
-class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
+class HtmlAnnotator : ExternalAnnotator<PsiFile, List<CustomAnnotation>>() {
 
-    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
-        val content = file.text
-        val pluginPath = PluginPathManager.getPluginHomePath(AccessibilityLinterUtil.PACKAGE_NAME)
-        println("pluginPath ci: $pluginPath")
-        val pluginDirectory = File(pluginPath)
-        val temporaryFile = File.createTempFile("temp.", ".html")
-        val temporaryFilePath = temporaryFile.absolutePath
-        File(temporaryFilePath).appendText(content)
-        val command = listOf("node", "/home/pixel/.nvm/versions/node/v16.14.0/lib/node_modules/accessibility-checker/bin/achecker.js","--reportLevels","violation","--outputFormat","json","--policies","IBM_Accessibility,WCAG_2_1", "--outputFolder","/tmp", temporaryFilePath)
-        //val command = listOf("achecker", "--reportLevels violation --outputFormat json --policies IBM_Accessibility,WCAG_2_1,WCAG_2_0", temporaryFilePath)
-        val generalCommandLine = GeneralCommandLine(command)
-        generalCommandLine.charset = Charset.forName("UTF-8")
-        //generalCommandLine.workDirectory = pluginDirectory
-        val result = ExecUtil.execAndGetOutput(generalCommandLine)
-        print(result.stdout)
-        File(temporaryFilePath).delete()
-        return CollectedInformation(temporaryFilePath, file)
+    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): PsiFile? {
+        println("Hello")
+        return file
     }
 
-    override fun doAnnotate(collectedInfo: CollectedInformation?): List<CustomAnnotation>? {
+    override fun doAnnotate(collectedInformation: PsiFile?): List<CustomAnnotation>? {
+        println(123)
+        val input = collectedInformation!!.text
+        println(input)
+        val service =  ServiceManager.getService(collectedInformation.project, LinterService::class.java)
+        val response = service.runRequest(input)
+        print(response!!.get())
 //        val temporaryFilePath = collectedInfo?.temporaryFilePath
 //        if (temporaryFilePath != null) {
 //            val command = listOf("achecker --reportLevels violation --outputFormat json --policies IBM_Accessibility,WCAG_2_1,WCAG_2_0", temporaryFilePath)

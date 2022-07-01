@@ -1,0 +1,15 @@
+{
+  "name": "accessibility-linter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axe-core": "^4.4.2",
+    "jsdom": "^19.0.0"
+  }
+}

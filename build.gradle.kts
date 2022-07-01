@@ -113,4 +113,14 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
+
+    prepareSandbox {
+        doLast {
+            val libraries = "${destinationDir}/accessibility-linter/lib/"
+            copy {
+                from("${project.projectDir}/src/main/javascript")
+                into(libraries)
+            }
+        }
+    }
 }

@@ -5,6 +5,7 @@
     <vendor>bucherfa</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.MyApplicationService"/>
@@ -13,6 +14,7 @@
                 language="HTML"
                 implementationClass="com.github.bucherfa.accessibilitylinter.annotators.HtmlAnnotator"
         />
+        <projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.LinterService"/>
     </extensions>
 
     <applicationListeners>
