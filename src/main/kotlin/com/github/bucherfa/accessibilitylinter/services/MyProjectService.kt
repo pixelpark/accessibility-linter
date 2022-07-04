@@ -15,20 +15,5 @@ class MyProjectService(project: Project) {
 
     init {
         println(MyBundle.message("projectService", project.name))
-//        val nodeJsInstance = NodeJsInterpreterManager.getInstance(project)
-//        val npmInstance = NpmManager.getInstance(project)
-//        val a = npmInstance.getPackage(nodeJsInstance.interpreter)
-//        npmInstance.npmInstallPresentableText
-//        println(npmInstance.npmInstallPresentableText)
-//        println("xD")
-//        println(nodeJsInstance.interpreter?.presentableName ?: "node1")
-//        println(nodeJsInstance.interpreter?.referenceName ?: "node2")
-//        val b = GeneralCommandLine(nodeJsInstance.interpreter?.presentableName ?: "node")
-//        val service =  ServiceManager.getService(project, LinterService::class.java)
-//        val response = service.runRequest("<html></html>")
-//        println(response!!.get())
-//        println("############")
-        //JSLanguageServiceUtil.getPluginDirectory(this.javaClass, )
-
     }
 }

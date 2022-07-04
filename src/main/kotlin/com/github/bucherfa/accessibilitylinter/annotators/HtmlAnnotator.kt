@@ -34,30 +34,21 @@ class HtmlAnnotator : ExternalAnnotator<PsiFile, List<CustomAnnotation>>() {
         val service =  ServiceManager.getService(collectedInformation.project, LinterService::class.java)
         val response = service.runRequest(input)
         print(response!!.get())
-//        val temporaryFilePath = collectedInfo?.temporaryFilePath
-//        if (temporaryFilePath != null) {
-//            val command = listOf("achecker --reportLevels violation --outputFormat json --policies IBM_Accessibility,WCAG_2_1,WCAG_2_0", temporaryFilePath)
-//            val pluginPath = PluginPathManager.getPluginHomePath(AccessibilityLinterUtil.PACKAGE_NAME)
-//            println("pluginPath da: $pluginPath")
-//            val pluginDirectory = File(pluginPath)
-//            val generalCommandLine = GeneralCommandLine(command)
-//            generalCommandLine.charset = Charset.forName("UTF-8")
-//            //generalCommandLine.workDirectory = pluginDirectory
-//            val result = ExecUtil.execAndGetOutput(generalCommandLine)
-//            print(result.stdout)
-//            File(temporaryFilePath).delete()
-//        }
         val annotations: MutableList<CustomAnnotation> = mutableListOf()
-//        val startIndex = content.indexOf("Hello World")
-//        println(startIndex)
-//        if (startIndex > 0) {
-//            val newAnnotation = CustomAnnotation(TextRange(startIndex, startIndex + "Hello World".length), "Please include the whole universe! ;)")
-//            annotations.add(newAnnotation)
-//        }
-//        println("Length: " + annotations.size)
-//        println("result: " + result.stdout)
+        response.get().let {
+            val element = it.element
+            val result = element.getAsJsonArray("result")
+            for (violation in result) {
+                val snippet = violation.asJsonObject.get("html").asString
+                val startIndex = input.indexOf(snippet)
+                if (startIndex < 0) {
+                    println("Couldn't find startIndex for $snippet")
+                    continue
+                }
+                annotations.add(CustomAnnotation(TextRange(startIndex, startIndex + snippet.length), violation.asJsonObject.get("help").asString))
+            }
+        }
         return annotations
-        //return super.doAnnotate(collectedInfo)
     }
 
     override fun apply(file: PsiFile, annotationResult: List<CustomAnnotation>?, holder: AnnotationHolder) {
@@ -67,7 +58,6 @@ class HtmlAnnotator : ExternalAnnotator<PsiFile, List<CustomAnnotation>>() {
                 annotationBuilder.create()
             }
         }
-        //super.apply(file, annotationResult, holder)
     }
 
 }
