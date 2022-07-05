@@ -20,6 +20,7 @@ class AccessibilityLinterPlugin {
                             const entry = {}
                             entry.type = violation.id
                             entry.help = violation.help
+                            entry.helpUrl = violation.helpUrl
                             entry.html = node.html
                             entry.all = violation
                             data.push(entry)

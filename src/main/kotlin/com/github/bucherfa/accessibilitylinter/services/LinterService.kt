@@ -38,8 +38,6 @@ class ServiceProtocol(project: Project, readyConsumer: Consumer<*>) : JSLanguage
         result.pluginName = "accessibility-linter"
         val file = JSLanguageServiceUtil.getPluginDirectory(this.javaClass, "lib/index.js")
         result.pluginPath = LocalFilePath.create(file.absolutePath)
-        println(result)
-        println(result.pluginPath)
         return result
     }
 
