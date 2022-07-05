@@ -112,7 +112,7 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
     }
 
     private fun removeCommentsFromString(string: String, startIndicator: String, endIndicator: String): String {
-        var result = string;
+        var result = string
         val regex = Regex("$startIndicator.*?$endIndicator")
         val occasions = regex.findAll(string)
         for (occasion in occasions) {

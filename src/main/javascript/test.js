@@ -1,4 +1,4 @@
-const { factory } = require("./index")
+const { factory } = require("./index");
 
 const input = `
 <!--<html></html>-->
@@ -11,7 +11,7 @@ const input = `
         <a href="#yo">asd</a>
     </body>
 </html>
-`
+`;
 
 const config = {
     rules: {
@@ -21,10 +21,9 @@ const config = {
         "not-a-rule": false
     },
     tags: []
-}
-
+};
 
 factory.create().languagePlugin.onMessage(
     JSON.stringify({ seq: 1, arguments: { input, config } }),
     new class { write(msg) { console.log(JSON.stringify(JSON.parse(msg), null, 2)) }}
-)
+);
