@@ -2,6 +2,7 @@ package com.github.bucherfa.accessibilitylinter.annotators
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.github.bucherfa.accessibilitylinter.misc.ConfigAxe
 import com.github.bucherfa.accessibilitylinter.services.LinterService
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
@@ -16,23 +17,6 @@ import java.nio.file.Path
 
 class CustomAnnotation(val range: TextRange, val type: String, val message: String, val url: String)
 class CollectedInformation(val file: PsiFile, val config: ConfigAxe)
-
-class ConfigAxe {
-    val rules: Map<String, Boolean>
-    val tags: MutableList<String>
-    constructor() {
-        this.rules = mapOf()
-        this.tags = mutableListOf()
-    }
-    constructor(rules: Map<String, Boolean>, tags: MutableList<String>) {
-        this.rules = rules
-        this.tags = tags
-    }
-
-    override fun toString(): String {
-        return "rules: ${this.rules}, tags: ${this.tags}"
-    }
-}
 
 class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
 
@@ -56,7 +40,8 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
                 val snippet = violation.asJsonObject.get("node").asJsonObject.get("source").asString
                 // TODO multiple occasions
                 // TODO ignore comments
-                val startIndex = input.indexOf(snippet)
+                val sanitizedInput = removeCommentsFromString(input, "<!--", "-->")
+                val startIndex = sanitizedInput.indexOf(snippet)
                 if (startIndex < 0) {
                     println("Couldn't find startIndex for $snippet")
                     continue
@@ -91,7 +76,6 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
 
     private fun getConfig(file: PsiFile, editor: Editor): ConfigAxe {
         val configFiles = FilenameIndex.getVirtualFilesByName(file.project, "axe-linter.yml", GlobalSearchScope.projectScope(file.project))
-        println(configFiles.size)
         for (configFile in configFiles) {
             //TODO check if configFile is dir
             val configFilePath = configFile.path
@@ -108,5 +92,20 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             }
         }
         return ConfigAxe()
+    }
+
+    private fun removeCommentsFromString(string: String, startIndicator: String, endIndicator: String): String {
+        var result = string;
+        val regex = Regex("$startIndicator.*?$endIndicator")
+        val occasions = regex.findAll(string)
+        for (occasion in occasions) {
+            val length = occasion.range.last - occasion.range.first + 1
+            var replacementString = ""
+            for (i in 0 until length) {
+                replacementString += " "
+            }
+            result = result.replaceRange(occasion.range, replacementString)
+        }
+        return result
     }
 }

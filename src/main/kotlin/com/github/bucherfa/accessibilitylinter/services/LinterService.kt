@@ -1,6 +1,6 @@
 package com.github.bucherfa.accessibilitylinter.services
 
-import com.github.bucherfa.accessibilitylinter.annotators.ConfigAxe
+import com.github.bucherfa.accessibilitylinter.misc.ConfigAxe
 import com.intellij.lang.javascript.service.*
 import com.intellij.lang.javascript.service.protocol.*
 import com.intellij.openapi.project.Project
