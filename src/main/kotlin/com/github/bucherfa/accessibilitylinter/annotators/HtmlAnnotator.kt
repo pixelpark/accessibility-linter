@@ -21,6 +21,7 @@ class CollectedInformation(val file: PsiFile, val config: ConfigAxe)
 class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
 
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
+        println("Starting...")
         return CollectedInformation(file, getConfig(file, editor))
     }
 
@@ -36,22 +37,36 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         if (response != null) {
             val element = response.get().element
             val result = element.getAsJsonArray("result")
+            val unrecognizableViolations = mutableListOf<String>()
+            val duplicateViolations = mutableListOf<String>()
             for (violation in result) {
+                val type = violation.asJsonObject.get("type").asString
                 val snippet = violation.asJsonObject.get("node").asJsonObject.get("source").asString
                 // TODO multiple occasions
-                // TODO ignore comments
                 val sanitizedInput = removeCommentsFromString(input, "<!--", "-->")
                 val startIndex = sanitizedInput.indexOf(snippet)
                 if (startIndex < 0) {
-                    println("Couldn't find startIndex for $snippet")
+                    unrecognizableViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
                     continue
                 }
                 val range = TextRange(startIndex, startIndex + snippet.length)
-                val type = violation.asJsonObject.get("type").asString
                 val helpString = violation.asJsonObject.get("help").asString
                 val helpUrl = violation.asJsonObject.get("helpUrl").asString
-                annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
+                // avoid duplicates
+                if (annotations.find { customAnnotation -> customAnnotation.type == type &&
+                                customAnnotation.range.startOffset == range.startOffset &&
+                                customAnnotation.range.startOffset == range.startOffset } == null) {
+                    annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
+                } else {
+                    duplicateViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
+                }
             }
+            if (unrecognizableViolations.size > 0)
+                println("Unable to match ${unrecognizableViolations.size} violations.\n" +
+                        "    $unrecognizableViolations")
+            if (duplicateViolations.size > 0)
+                println("${duplicateViolations.size} duplicate violations found.\n" +
+                        "    $duplicateViolations")
         }
         return annotations
     }
@@ -72,6 +87,7 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
 //                    .create()
             }
         }
+        println("... finished")
     }
 
     private fun getConfig(file: PsiFile, editor: Editor): ConfigAxe {
