@@ -81,7 +81,8 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
                         "Accessibility Linter: $adjustedMessage " +
                         "(<a href=\"${annotation.url}\">${annotation.type}</a>)" +
                         "</body></html>"
-                holder.createAnnotation(HighlightSeverity.WARNING, annotation.range, annotation.message, htmlTooltip)
+                val message = "${annotation.message} (${annotation.type})"
+                holder.createAnnotation(HighlightSeverity.WARNING, annotation.range, message, htmlTooltip)
 //                holder.newAnnotation(HighlightSeverity.WARNING, annotation.message)
 //                    .range(annotation.range)
 //                    .create()
