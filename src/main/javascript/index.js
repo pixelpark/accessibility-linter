@@ -12,17 +12,16 @@ class AccessibilityLinterPlugin {
         }
         try {
             const dom = new JSDOM(request.arguments.input)
-            axe.run(dom.window.document.documentElement)
+            axe.run(dom.window.document.documentElement, { reporter: "raw" })
                 .then(results => {
                     const data = []
-                    for (const violation of results.violations) {
-                        for (const node of violation.nodes) {
+                    for (const rule of results) {
+                        for (const violation of rule.violations) {
                             const entry = {}
-                            entry.type = violation.id
-                            entry.help = violation.help
-                            entry.helpUrl = violation.helpUrl
-                            entry.html = node.html
-                            entry.all = violation
+                            entry.type = rule.id
+                            entry.help = rule.help
+                            entry.helpUrl = rule.helpUrl
+                            entry.node = violation.node
                             data.push(entry)
                         }
                     }

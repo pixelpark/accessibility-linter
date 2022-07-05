@@ -1,5 +1,7 @@
 package com.github.bucherfa.accessibilitylinter.annotators
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.github.bucherfa.accessibilitylinter.services.LinterService
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
@@ -8,26 +10,52 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
+import java.nio.file.Path
 
 class CustomAnnotation(val range: TextRange, val type: String, val message: String, val url: String)
+class CollectedInformation(val file: PsiFile, val config: ConfigAxe)
 
-class HtmlAnnotator : ExternalAnnotator<PsiFile, List<CustomAnnotation>>() {
-
-    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): PsiFile? {
-        return file
+class ConfigAxe {
+    val rules: Map<String, Boolean>
+    val tags: MutableList<String>
+    constructor() {
+        this.rules = mapOf()
+        this.tags = mutableListOf()
+    }
+    constructor(rules: Map<String, Boolean>, tags: MutableList<String>) {
+        this.rules = rules
+        this.tags = tags
     }
 
-    override fun doAnnotate(collectedInformation: PsiFile?): List<CustomAnnotation>? {
-        val input = collectedInformation!!.text
-        val service =  ServiceManager.getService(collectedInformation.project, LinterService::class.java)
-        val response = service.runRequest(input)
+    override fun toString(): String {
+        return "rules: ${this.rules}, tags: ${this.tags}"
+    }
+}
+
+class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
+
+    override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
+        return CollectedInformation(file, getConfig(file, editor))
+    }
+
+    override fun doAnnotate(collectedInformation: CollectedInformation?): List<CustomAnnotation>? {
+        if (collectedInformation == null) {
+            return listOf()
+        }
+        val file = collectedInformation.file
+        val input = file.text
+        val service =  ServiceManager.getService(file.project, LinterService::class.java)
+        val response = service.runRequest(input, collectedInformation.config)
         val annotations: MutableList<CustomAnnotation> = mutableListOf()
         if (response != null) {
             val element = response.get().element
             val result = element.getAsJsonArray("result")
             for (violation in result) {
-                val snippet = violation.asJsonObject.get("html").asString
-                // TODO multiple occasions, ignore comments
+                val snippet = violation.asJsonObject.get("node").asJsonObject.get("source").asString
+                // TODO multiple occasions
+                // TODO ignore comments
                 val startIndex = input.indexOf(snippet)
                 if (startIndex < 0) {
                     println("Couldn't find startIndex for $snippet")
@@ -59,5 +87,26 @@ class HtmlAnnotator : ExternalAnnotator<PsiFile, List<CustomAnnotation>>() {
 //                    .create()
             }
         }
+    }
+
+    private fun getConfig(file: PsiFile, editor: Editor): ConfigAxe {
+        val configFiles = FilenameIndex.getVirtualFilesByName(file.project, "axe-linter.yml", GlobalSearchScope.projectScope(file.project))
+        println(configFiles.size)
+        for (configFile in configFiles) {
+            //TODO check if configFile is dir
+            val configFilePath = configFile.path
+            val projectPath = file.project.basePath
+            val configFileName = configFile.name
+            if (!projectPath.isNullOrEmpty() && Path.of(projectPath, configFileName).toString() == configFilePath) {
+                val mapper = ObjectMapper(YAMLFactory())
+                return try {
+                    mapper.readValue(Path.of(configFile.path).toFile(), ConfigAxe::class.java)
+                } catch (e: Exception) {
+                    //TODO user notification https://plugins.jetbrains.com/docs/intellij/notifications.html
+                    ConfigAxe()
+                }
+            }
+        }
+        return ConfigAxe()
     }
 }

@@ -1,5 +1,6 @@
 package com.github.bucherfa.accessibilitylinter.services
 
+import com.github.bucherfa.accessibilitylinter.annotators.ConfigAxe
 import com.intellij.lang.javascript.service.*
 import com.intellij.lang.javascript.service.protocol.*
 import com.intellij.openapi.project.Project
@@ -20,13 +21,13 @@ class LinterService(project: Project) :
 
     override fun needInitToolWindow() = false
 
-    fun runRequest(input: String): Future<JSLanguageServiceAnswer>? {
-        return sendCommand(SimpleCommand(input)) { _, answer ->
+    fun runRequest(input: String, config: ConfigAxe): Future<JSLanguageServiceAnswer>? {
+        return sendCommand(SimpleCommand(input, config)) { _, answer ->
             answer
         }
     }
 
-    class SimpleCommand(val input: String) : JSLanguageServiceSimpleCommand, JSLanguageServiceObject {
+    class SimpleCommand(val input: String, val config: ConfigAxe) : JSLanguageServiceSimpleCommand, JSLanguageServiceObject {
         override fun getCommand() = "accessibility-linter"
         override fun toSerializableObject() = this
     }
