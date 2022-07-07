@@ -16,7 +16,7 @@
 
 <!-- Plugin description -->
 
-Assistant for writing inclusive code. Based on [dequelabs/axe-core][https://github.com/dequelabs/axe-core].
+Assistant for writing inclusive code. Based on [dequelabs/axe-core](https://github.com/dequelabs/axe-core).
 
 Features:
 - real-time code analysis</li>
