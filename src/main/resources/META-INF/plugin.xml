@@ -3,20 +3,7 @@
     <id>com.github.bucherfa.accessibilitylinter</id>
     <name>Accessibility Linter</name>
     <version>0.1.0</version>
-    <vendor>bucherfa</vendor>
-
-    <description>
-  <![CDATA[
-    Assistant for writing inclusive code. Based on <a href="https://github.com/dequelabs/axe-core">dequelabs/axe-core</a>.
-    <p>Features:
-    <ul>
-      <li>real-time code analysis</li>
-      <li>annotations for improvements</li>
-      <li>configuration file support to enable and disable rules</li>
-    </ul>
-    </p>
-  ]]>
-    </description>
+    <vendor url="https://github.com/bucherfa">Fabian Bucher</vendor>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>JavaScript</depends>
