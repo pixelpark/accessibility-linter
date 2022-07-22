@@ -4,8 +4,10 @@
 
 ## [Unreleased]
 ### Changed
-- targeting the newest releases
-- cleanup readme
+- Targeting the newest releases
+- Cleanup readme
+- HtmlAnnotator: recognise multiple occasions of the same violation snippet
+- Improve locating the violations
 
 ### Fixed
 - replacing deprecated functions

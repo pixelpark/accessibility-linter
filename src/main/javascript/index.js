@@ -16,7 +16,12 @@ class AccessibilityLinterPlugin {
             return
         }
         try {
-            const dom = new JSDOM(request.arguments.input);
+            const input = request.arguments.input;
+            const dom = new JSDOM(
+                input,
+                { includeNodeLocations: true }
+            );
+            const document = dom.window.document;
             const config = request.arguments.config;
             const rules = config.rules;
             const ruleKeys = Object.keys(rules);
@@ -29,23 +34,59 @@ class AccessibilityLinterPlugin {
                     rules[key] = { enabled: value };
                 }
             }
-            axe.run(dom.window.document.documentElement, { reporter: "raw", rules })
+            axe.run(
+                dom.window.document.documentElement,
+                { reporter: "raw", rules }
+            )
                 .then(results => {
+                    const mapping = {};
                     const data = [];
                     for (const rule of results) {
                         for (const violation of rule.violations) {
-                            const entry = {};
-                            entry.type = rule.id;
-                            entry.help = rule.help;
-                            entry.helpUrl = rule.helpUrl;
-                            entry.node = violation.node;
-                            data.push(entry);
+                            const type = rule.id;
+                            if (typeof mapping[type] === 'undefined') {
+                                mapping[type] = data.length;
+                                const entry = {};
+                                entry.type = type;
+                                entry.help = rule.help;
+                                entry.helpUrl = rule.helpUrl;
+                                entry.occasions = [];
+                                data.push(entry);
+                            }
+                            for (const selector of violation.node.selector) {
+                                const element = document.querySelector(selector);
+                                const location = dom.nodeLocation(element);
+                                if (location !== null) {
+                                    const startOffset = location.startOffset;
+                                    let endOffset = location.endOffset;
+                                    const startTag = location.startTag;
+                                    if (location.startLine !== location.endLine) {
+                                        endOffset = startTag.endOffset;
+                                    }
+                                    if (startTag.startLine !== startTag.endLine) {
+                                        endOffset = input.indexOf('\n', startOffset) - 1;
+                                    }
+                                    data[mapping[type]].occasions.push({
+                                        startOffset,
+                                        endOffset
+                                    });
+                                }
+                            }
                         }
                     }
-                    messageWriter.write(JSON.stringify({ request_seq: request.seq, result: data }));
+                    const violationsWithOccasions = data.filter(
+                        violation => violation.occasions.length > 0
+                    )
+                    messageWriter.write(JSON.stringify({
+                        request_seq: request.seq,
+                        result: violationsWithOccasions
+                    }));
                 })
                 .catch(e => {
-                    messageWriter.write(JSON.stringify({ request_seq: request.seq, error: e }));
+                    messageWriter.write(JSON.stringify({
+                        request_seq: request.seq,
+                        error: e
+                    }));
                 });
         } catch (e) {
             response.error = e;

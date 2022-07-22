@@ -6,9 +6,13 @@ const input = `
     <something></something>
     <head></head>
     <body><img
-    src=""><a href="#yo">asd</a>
+    src=""><img
+    src="">
+    <blink></blink>
+    <a href="#yo">asd</a>
         <a href="#yo">asd</a>
-        <a href="#yo">asd</a>
+        <a href="#yo" class="123">asd</a>
+        <blink></blink>
     </body>
 </html>
 `;

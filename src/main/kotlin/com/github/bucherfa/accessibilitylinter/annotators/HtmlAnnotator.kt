@@ -37,38 +37,19 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         if (response != null) {
             val element = response.get().element
             val result = element.getAsJsonArray("result")
-            val unrecognizableViolations = mutableListOf<String>()
-            val duplicateViolations = mutableListOf<String>()
             for (violation in result) {
-                val type = violation.asJsonObject.get("type").asString
-                val snippet = violation.asJsonObject.get("node").asJsonObject.get("source").asString
-                val sanitizedInput = removeCommentsFromString(input, "<!--", "-->")
-                val occasions = findOccasions(sanitizedInput, snippet)
-                if (occasions.size < 1) {
-                    unrecognizableViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
-                    continue
-                }
-                for (startIndex in occasions) {
-                    val endIndex = startIndex + snippet.length
-                    val range = TextRange(startIndex, endIndex)
-                    val helpString = violation.asJsonObject.get("help").asString
-                    val helpUrl = violation.asJsonObject.get("helpUrl").asString
-                    // avoid duplicates
-                    if (annotations.find { customAnnotation -> customAnnotation.type == type &&
-                                customAnnotation.range.startOffset == range.startOffset &&
-                                customAnnotation.range.endOffset == range.endOffset } == null) {
-                        annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
-                    } else {
-                        duplicateViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
-                    }
+                val violationObject = violation.asJsonObject
+                val type = violationObject.get("type").asString
+                val helpString = violationObject.get("help").asString
+                val helpUrl = violationObject.get("helpUrl").asString
+                for (occasion in violationObject.get("occasions").asJsonArray) {
+                    val occasionObject = occasion.asJsonObject
+                    val startOffset = occasionObject.get("startOffset").asInt
+                    val endOffset = occasionObject.get("endOffset").asInt
+                    val range = TextRange(startOffset, endOffset)
+                    annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
                 }
             }
-            if (unrecognizableViolations.size > 0)
-                println("Unable to match ${unrecognizableViolations.size} violations.\n" +
-                        "    $unrecognizableViolations")
-            if (duplicateViolations.size > 0)
-                println("${duplicateViolations.size} duplicate violations found.\n" +
-                        "    $duplicateViolations")
         }
         return annotations
     }
@@ -89,7 +70,6 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
 //                    .range(annotation.range)
 //                    .create()
             }
-            holder.newAnnotation(HighlightSeverity.WARNING, "TESTTESTTEST").range(TextRange.EMPTY_RANGE).create()
         }
         println("... finished")
     }
@@ -112,35 +92,5 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             }
         }
         return ConfigAxe()
-    }
-
-    private fun removeCommentsFromString(string: String, startIndicator: String, endIndicator: String): String {
-        var result = string
-        val regex = Regex("$startIndicator.*?$endIndicator")
-        val occasions = regex.findAll(string)
-        for (occasion in occasions) {
-            val length = occasion.range.last - occasion.range.first + 1
-            var replacementString = ""
-            for (i in 0 until length) {
-                replacementString += " "
-            }
-            result = result.replaceRange(occasion.range, replacementString)
-        }
-        return result
-    }
-
-    private fun findOccasions(input: String, snippet: String): MutableList<Int> {
-        var index = 0
-        val occasions = mutableListOf<Int>()
-        while (true) {
-            index = input.indexOf(snippet, index)
-            index += if (index != -1) {
-                occasions.add(index)
-                snippet.length
-            }
-            else {
-                return occasions
-            }
-        }
     }
 }
