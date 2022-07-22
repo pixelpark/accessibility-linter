@@ -29,9 +29,6 @@ class AccessibilityLinterPlugin {
                     rules[key] = { enabled: value };
                 }
             }
-            // TODO maybe filter out the tags after receiving the result
-            // TODO maybe same for rule id's?
-            // TODO if both are decided on afterwards one could think about moving the logic back into Kotlin...
             axe.run(dom.window.document.documentElement, { reporter: "raw", rules })
                 .then(results => {
                     const data = [];

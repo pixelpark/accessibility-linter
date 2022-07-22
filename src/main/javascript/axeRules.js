@@ -1,5 +1,4 @@
 const axe = require("axe-core");
-// TODO figure out if each rule has at least one of these tags and what do with that information, regarding the axe-linter.yml
 const axeRules = axe.getRules();
 for (const rule of axeRules) {
     let hasRelevantTag = false;
