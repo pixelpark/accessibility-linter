@@ -3,11 +3,15 @@
 # accessibility-linter Changelog
 
 ## [Unreleased]
+## Added
+- Unit tests for JavaScript part
+
 ### Changed
 - Targeting the newest releases
 - Cleanup readme
 - HtmlAnnotator: recognise multiple occasions of the same violation snippet
 - Improve locating the violations
+- Adjust build script (note: before publishing run `npm install --only=production` to get rid of dev dependencies)
 
 ### Fixed
 - replacing deprecated functions
