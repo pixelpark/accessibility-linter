@@ -3,6 +3,8 @@
 # accessibility-linter Changelog
 
 ## [Unreleased]
+
+## [0.2.0]
 ### Changed
 - Targeting the newest releases
 - Cleanup readme
