@@ -15,6 +15,11 @@ class AccessibilityLinterPlugin {
             messageWriter.write(JSON.stringify(response));
             return
         }
+        if (typeof request.arguments.config.rules === 'undefined') {
+            response.error = 'rules from config missing';
+            messageWriter.write(JSON.stringify(response));
+            return
+        }
         try {
             const input = request.arguments.input;
             const dom = new JSDOM(
@@ -23,17 +28,7 @@ class AccessibilityLinterPlugin {
             );
             const document = dom.window.document;
             const config = request.arguments.config;
-            const rules = config.rules;
-            const ruleKeys = Object.keys(rules);
-            const axeRules = axe.getRules();
-            for (const key of ruleKeys) {
-                if (axeRules.findIndex(value => value.ruleId === key) < 0) {
-                    delete (rules[key]);
-                } else {
-                    const value = rules[key];
-                    rules[key] = { enabled: value };
-                }
-            }
+            const rules = this.prepareRules(config.rules);
             axe.run(
                 dom.window.document.documentElement,
                 { reporter: "raw", rules }
@@ -92,6 +87,20 @@ class AccessibilityLinterPlugin {
             response.error = e;
             messageWriter.write(JSON.stringify(response));
         }
+    }
+    prepareRules(rules) {
+        const preparedRules = {}
+        const ruleKeys = Object.keys(rules);
+        const axeRules = axe.getRules();
+        for (const key of ruleKeys) {
+            const isValidRule = axeRules
+                .findIndex(value => value.ruleId === key) >= 0;
+            if (isValidRule) {
+                const value = rules[key];
+                preparedRules[key] = { enabled: value };
+            }
+        }
+        return preparedRules;
     }
 }
 

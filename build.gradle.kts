@@ -118,7 +118,11 @@ tasks {
         doLast {
             val libraries = "${destinationDir}/accessibility-linter/lib/"
             copy {
-                from("${project.projectDir}/src/main/javascript")
+                from("${project.projectDir}/src/main/javascript/node_modules")
+                into("${libraries}/node_modules/")
+            }
+            copy {
+                from("${project.projectDir}/src/main/javascript/src/")
                 into(libraries)
             }
         }

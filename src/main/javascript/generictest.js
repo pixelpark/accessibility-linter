@@ -1,4 +1,4 @@
-const { factory } = require("./index");
+const { factory } = require("./src/index");
 
 const input = `
 <!--<html></html>-->
