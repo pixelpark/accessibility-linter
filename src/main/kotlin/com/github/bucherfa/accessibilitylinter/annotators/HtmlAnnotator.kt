@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.github.bucherfa.accessibilitylinter.misc.ConfigAxe
 import com.github.bucherfa.accessibilitylinter.services.LinterService
+import com.google.gson.JsonArray
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.lang.annotation.HighlightSeverity
@@ -33,23 +34,11 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         val input = file.text
         val linterService = file.project.service<LinterService>()
         val response = linterService.runRequest(input, collectedInformation.config)
-        val annotations: MutableList<CustomAnnotation> = mutableListOf()
+        var annotations: List<CustomAnnotation> = mutableListOf()
         if (response != null) {
             val element = response.get().element
             val result = element.getAsJsonArray("result")
-            for (violation in result) {
-                val violationObject = violation.asJsonObject
-                val type = violationObject.get("type").asString
-                val helpString = violationObject.get("help").asString
-                val helpUrl = violationObject.get("helpUrl").asString
-                for (occasion in violationObject.get("occasions").asJsonArray) {
-                    val occasionObject = occasion.asJsonObject
-                    val startOffset = occasionObject.get("startOffset").asInt
-                    val endOffset = occasionObject.get("endOffset").asInt
-                    val range = TextRange(startOffset, endOffset)
-                    annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
-                }
-            }
+            annotations = processResult(result)
         }
         return annotations
     }
@@ -66,9 +55,6 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
                         "</body></html>"
                 val message = "Accessibility Linter: ${annotation.message} (${annotation.type})"
                 holder.createAnnotation(HighlightSeverity.WARNING, annotation.range, message, htmlTooltip)
-//                holder.newAnnotation(HighlightSeverity.WARNING, annotation.message)
-//                    .range(annotation.range)
-//                    .create()
             }
         }
         println("... finished")
@@ -77,7 +63,9 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
     private fun getConfig(file: PsiFile): ConfigAxe {
         val configFiles = FilenameIndex.getVirtualFilesByName("axe-linter.yml", GlobalSearchScope.projectScope(file.project))
         for (configFile in configFiles) {
-            //TODO check if configFile is dir
+            if (configFile.isDirectory) {
+                continue
+            }
             val configFilePath = configFile.path
             val projectPath = file.project.basePath
             val configFileName = configFile.name
@@ -92,5 +80,23 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             }
         }
         return ConfigAxe()
+    }
+
+    fun processResult(result: JsonArray): List<CustomAnnotation> {
+        val annotations = mutableListOf<CustomAnnotation>()
+        for (violation in result) {
+            val violationObject = violation.asJsonObject
+            val type = violationObject.get("type").asString
+            val helpString = violationObject.get("help").asString
+            val helpUrl = violationObject.get("helpUrl").asString
+            for (occasion in violationObject.get("occasions").asJsonArray) {
+                val occasionObject = occasion.asJsonObject
+                val startOffset = occasionObject.get("startOffset").asInt
+                val endOffset = occasionObject.get("endOffset").asInt
+                val range = TextRange(startOffset, endOffset)
+                annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
+            }
+        }
+        return annotations
     }
 }

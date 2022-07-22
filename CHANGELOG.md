@@ -3,7 +3,7 @@
 # accessibility-linter Changelog
 
 ## [Unreleased]
-## Added
+### Added
 - Unit tests for JavaScript part
 
 ### Changed
