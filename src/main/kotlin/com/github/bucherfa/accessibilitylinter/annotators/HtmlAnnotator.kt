@@ -31,8 +31,8 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         }
         val file = collectedInformation.file
         val input = file.text
-        val service =  service<LinterService>()
-        val response = service.runRequest(input, collectedInformation.config)
+        val linterService = file.project.service<LinterService>()
+        val response = linterService.runRequest(input, collectedInformation.config)
         val annotations: MutableList<CustomAnnotation> = mutableListOf()
         if (response != null) {
             val element = response.get().element
@@ -42,23 +42,25 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             for (violation in result) {
                 val type = violation.asJsonObject.get("type").asString
                 val snippet = violation.asJsonObject.get("node").asJsonObject.get("source").asString
-                // TODO multiple occasions
                 val sanitizedInput = removeCommentsFromString(input, "<!--", "-->")
-                val startIndex = sanitizedInput.indexOf(snippet)
-                if (startIndex < 0) {
+                val occasions = findOccasions(sanitizedInput, snippet)
+                if (occasions.size < 1) {
                     unrecognizableViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
                     continue
                 }
-                val range = TextRange(startIndex, startIndex + snippet.length)
-                val helpString = violation.asJsonObject.get("help").asString
-                val helpUrl = violation.asJsonObject.get("helpUrl").asString
-                // avoid duplicates
-                if (annotations.find { customAnnotation -> customAnnotation.type == type &&
+                for (startIndex in occasions) {
+                    val endIndex = startIndex + snippet.length
+                    val range = TextRange(startIndex, endIndex)
+                    val helpString = violation.asJsonObject.get("help").asString
+                    val helpUrl = violation.asJsonObject.get("helpUrl").asString
+                    // avoid duplicates
+                    if (annotations.find { customAnnotation -> customAnnotation.type == type &&
                                 customAnnotation.range.startOffset == range.startOffset &&
-                                customAnnotation.range.startOffset == range.startOffset } == null) {
-                    annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
-                } else {
-                    duplicateViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
+                                customAnnotation.range.endOffset == range.endOffset } == null) {
+                        annotations.add(CustomAnnotation(range, type, helpString, helpUrl))
+                    } else {
+                        duplicateViolations.add("$type (${violation.asJsonObject.get("node").asJsonObject.get("ancestry").asString})")
+                    }
                 }
             }
             if (unrecognizableViolations.size > 0)
@@ -81,12 +83,13 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
                         "Accessibility Linter: $adjustedMessage " +
                         "(<a href=\"${annotation.url}\">${annotation.type}</a>)" +
                         "</body></html>"
-                val message = "${annotation.message} (${annotation.type})"
+                val message = "Accessibility Linter: ${annotation.message} (${annotation.type})"
                 holder.createAnnotation(HighlightSeverity.WARNING, annotation.range, message, htmlTooltip)
 //                holder.newAnnotation(HighlightSeverity.WARNING, annotation.message)
 //                    .range(annotation.range)
 //                    .create()
             }
+            holder.newAnnotation(HighlightSeverity.WARNING, "TESTTESTTEST").range(TextRange.EMPTY_RANGE).create()
         }
         println("... finished")
     }
@@ -124,5 +127,20 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             result = result.replaceRange(occasion.range, replacementString)
         }
         return result
+    }
+
+    private fun findOccasions(input: String, snippet: String): MutableList<Int> {
+        var index = 0
+        val occasions = mutableListOf<Int>()
+        while (true) {
+            index = input.indexOf(snippet, index)
+            index += if (index != -1) {
+                occasions.add(index)
+                snippet.length
+            }
+            else {
+                return occasions
+            }
+        }
     }
 }
