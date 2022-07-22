@@ -7,7 +7,7 @@ import com.github.bucherfa.accessibilitylinter.services.LinterService
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.ExternalAnnotator
 import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
@@ -22,7 +22,7 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
 
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
         println("Starting...")
-        return CollectedInformation(file, getConfig(file, editor))
+        return CollectedInformation(file, getConfig(file))
     }
 
     override fun doAnnotate(collectedInformation: CollectedInformation?): List<CustomAnnotation>? {
@@ -31,7 +31,7 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         }
         val file = collectedInformation.file
         val input = file.text
-        val service =  ServiceManager.getService(file.project, LinterService::class.java)
+        val service =  service<LinterService>()
         val response = service.runRequest(input, collectedInformation.config)
         val annotations: MutableList<CustomAnnotation> = mutableListOf()
         if (response != null) {
@@ -91,8 +91,8 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
         println("... finished")
     }
 
-    private fun getConfig(file: PsiFile, editor: Editor): ConfigAxe {
-        val configFiles = FilenameIndex.getVirtualFilesByName(file.project, "axe-linter.yml", GlobalSearchScope.projectScope(file.project))
+    private fun getConfig(file: PsiFile): ConfigAxe {
+        val configFiles = FilenameIndex.getVirtualFilesByName("axe-linter.yml", GlobalSearchScope.projectScope(file.project))
         for (configFile in configFiles) {
             //TODO check if configFile is dir
             val configFilePath = configFile.path
