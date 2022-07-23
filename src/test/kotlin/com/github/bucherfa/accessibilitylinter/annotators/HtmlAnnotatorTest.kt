@@ -10,4 +10,57 @@ internal class HtmlAnnotatorTest {
         val list = HtmlAnnotator().processResult(JsonArray())
         assertEquals(0, list.size)
     }
+
+    @Test
+    fun getFileExtensionNormalFile() {
+        val fileType = HtmlAnnotator().getFileExtension("index.html")
+        assertEquals("html", fileType)
+    }
+    @Test
+    fun getFileExtensionOnlyExtension() {
+        val fileType = HtmlAnnotator().getFileExtension(".html")
+        assertEquals("html", fileType)
+    }
+    @Test
+    fun getFileExtensionNoSeparator() {
+        val fileType = HtmlAnnotator().getFileExtension("html")
+        assertEquals("html", fileType)
+    }
+
+    @Test
+    fun removeCommentsFromStringHandlebars0() {
+        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
+        assertEquals("<blink></blink>\n" +
+                "                      ", cleanString)
+    }
+    @Test
+    fun removeCommentsFromStringHandlebars1() {
+        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{! <blink></blink> }}\n<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
+        assertEquals("<blink></blink>\n" +
+                "                      \n" +
+                "<blink></blink>\n" +
+                "                      ", cleanString)
+    }
+    @Test
+    fun removeCommentsFromStringHandlebars2() {
+        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{!-- <blink></blink> --}}", "\\{\\{!\\-\\-", "\\-\\-\\}\\}")
+        assertEquals("<blink></blink>\n" +
+                "                          ", cleanString)
+    }
+
+    @Test
+    fun prepareInputInvalidFileType() {
+        val input = HtmlAnnotator().prepareInput("invalidFileType", "")
+        assertEquals(null, input)
+    }
+    @Test
+    fun prepareInputHandlebarsCommentWithinComment() {
+        val input = HtmlAnnotator().prepareInput("hbs", "{{!-- {{!<blink></blink>}} --}}")
+        assertEquals("                               ", input)
+    }
+    @Test
+    fun prepareInputHtml() {
+        val input = HtmlAnnotator().prepareInput("html", "<html></html>")
+        assertEquals("<html></html>", input)
+    }
 }

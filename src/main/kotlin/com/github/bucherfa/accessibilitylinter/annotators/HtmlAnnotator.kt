@@ -17,23 +17,27 @@ import com.intellij.psi.search.GlobalSearchScope
 import java.nio.file.Path
 
 class CustomAnnotation(val range: TextRange, val type: String, val message: String, val url: String)
-class CollectedInformation(val file: PsiFile, val config: ConfigAxe)
+class CollectedInformation(val input: String, val config: ConfigAxe, val linterService: LinterService)
 
 class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
 
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
         println("Starting...")
-        return CollectedInformation(file, getConfig(file))
+        val dirtyInput = file.text
+        val fileType = getFileExtension(file.name)
+        val cleanInput = prepareInput(fileType, dirtyInput) ?: return null
+        val linterService = file.project.service<LinterService>()
+        return CollectedInformation(cleanInput, getConfig(file), linterService)
     }
 
     override fun doAnnotate(collectedInformation: CollectedInformation?): List<CustomAnnotation>? {
         if (collectedInformation == null) {
             return listOf()
         }
-        val file = collectedInformation.file
-        val input = file.text
-        val linterService = file.project.service<LinterService>()
-        val response = linterService.runRequest(input, collectedInformation.config)
+        val response = collectedInformation.linterService.runRequest(
+            collectedInformation.input,
+            collectedInformation.config
+        )
         var annotations: List<CustomAnnotation> = mutableListOf()
         if (response != null) {
             val element = response.get().element
@@ -98,5 +102,47 @@ class HtmlAnnotator : ExternalAnnotator<CollectedInformation, List<CustomAnnotat
             }
         }
         return annotations
+    }
+
+    fun getFileExtension(fileName: String): String {
+        return fileName.split('.').last()
+    }
+
+    fun removeCommentsFromString(string: String, startIndicator: String, endIndicator: String): String {
+        var result = string
+        val regex = Regex("$startIndicator.*?$endIndicator")
+        val occasions = regex.findAll(string)
+        for (occasion in occasions) {
+            val length = occasion.range.last - occasion.range.first + 1
+            var replacementString = ""
+            for (i in 0 until length) {
+                replacementString += " "
+            }
+            result = result.replaceRange(occasion.range, replacementString)
+        }
+        return result
+    }
+
+    fun prepareInput(fileType: String, input: String): String? {
+        var output = input
+        val commentStartEndList: List<Pair<String, String>> = when (fileType) {
+            "html", "htm" -> listOf()
+            "hbs", "handlebars" -> {
+                listOf(
+                    Pair("\\{\\{!\\-\\-", "\\-\\-\\}\\}"),
+                    Pair("\\{\\{!", "\\}\\}"),
+                )
+                //removeCommentsFromString(input, "\\{\\{!", "\\}\\}")
+            }
+            else -> return null
+        }
+        for (commentStartEnd in commentStartEndList) {
+            output = removeCommentsFromString(
+                output,
+                commentStartEnd.first,
+                commentStartEnd.second
+            )
+        }
+        return output
     }
 }
