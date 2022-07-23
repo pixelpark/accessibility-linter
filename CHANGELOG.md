@@ -4,7 +4,8 @@
 
 ## [Unreleased]
 ### Added
-- Unit tests for JavaScript part
+- Unit tests for JavaScript and Kotlin functions
+- Support for handlebars files
 
 ### Changed
 - Targeting the newest releases
