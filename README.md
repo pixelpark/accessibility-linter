@@ -9,10 +9,10 @@
 Assistant for writing inclusive code. Based on [dequelabs/axe-core](https://github.com/dequelabs/axe-core).
 
 Features:
-- real-time code analysis</li>
-- annotations for improvements</li>
-- configuration file support to enable and disable rules</li>
-- currently supported file types: `html`
+- real-time code analysis
+- annotations for improvements
+- configuration file support to enable and disable rules
+- currently supported file types: `html`, `htm`, `hbs` and `handlebars`
 
 <!-- Plugin description end -->
 
