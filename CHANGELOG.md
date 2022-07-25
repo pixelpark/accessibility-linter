@@ -4,8 +4,15 @@
 
 ## [Unreleased]
 ### Added
+- Support for `vue` files
+
+### Changed
+- Annotator structure (abstract class)
+
+## [0.2.0]
+### Added
 - Unit tests for JavaScript and Kotlin functions
-- Support for handlebars files
+- Support for `handlebars` files
 
 ### Changed
 - Targeting the newest releases

@@ -49,18 +49,18 @@ internal class HtmlAnnotatorTest {
     }
 
     @Test
-    fun prepareInputInvalidFileType() {
-        val input = HtmlAnnotator().prepareInput("invalidFileType", "")
-        assertEquals(null, input)
+    fun prepareInputEmptyString() {
+        val input = HtmlAnnotator().prepareInput( "")
+        assertEquals("", input)
     }
-    @Test
-    fun prepareInputHandlebarsCommentWithinComment() {
-        val input = HtmlAnnotator().prepareInput("hbs", "{{!-- {{!<blink></blink>}} --}}")
-        assertEquals("                               ", input)
-    }
+//    @Test
+//    fun prepareInputHandlebarsCommentWithinComment() {
+//        val input = HtmlAnnotator().prepareInput("{{!-- {{!<blink></blink>}} --}}")
+//        assertEquals("                               ", input)
+//    }
     @Test
     fun prepareInputHtml() {
-        val input = HtmlAnnotator().prepareInput("html", "<html></html>")
+        val input = HtmlAnnotator().prepareInput("<html></html>")
         assertEquals("<html></html>", input)
     }
 }

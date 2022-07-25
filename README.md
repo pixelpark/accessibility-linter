@@ -12,7 +12,7 @@ Features:
 - real-time code analysis
 - annotations for improvements
 - configuration file support to enable and disable rules
-- currently supported file types: `html`, `htm`, `hbs` and `handlebars`
+- currently supported file types: `html`, `htm`, `hbs`, `handlebars` and `vue`
 
 <!-- Plugin description end -->
 
