@@ -6,12 +6,12 @@ class HandlebarsAnnotator : AnnotatorBase() {
 
     override fun prepareInput(input: String): String {
         println("###Handlebars!!!")
-        return removeMultipleCommentsFromString(
+        return removeMultipleElementsFromString(
             input,
             listOf(
                 Pair("\\{\\{!\\-\\-", "\\-\\-\\}\\}"),
-                Pair("\\{\\{!", "\\}\\}"),
+                Pair("\\{\\{", "\\}\\}"),
             )
-        );
+        )
     }
 }

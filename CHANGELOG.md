@@ -9,6 +9,9 @@
 ### Changed
 - Annotator structure (abstract class)
 
+### Fixed
+- Handlebars: filter out all handlebars syntax
+
 ## [0.2.0]
 ### Added
 - Unit tests for JavaScript and Kotlin functions

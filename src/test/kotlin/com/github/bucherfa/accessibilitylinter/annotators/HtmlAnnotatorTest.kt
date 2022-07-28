@@ -29,13 +29,13 @@ internal class HtmlAnnotatorTest {
 
     @Test
     fun removeCommentsFromStringHandlebars0() {
-        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
+        val cleanString = HtmlAnnotator().removeElementsFromString("<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
         assertEquals("<blink></blink>\n" +
                 "                      ", cleanString)
     }
     @Test
     fun removeCommentsFromStringHandlebars1() {
-        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{! <blink></blink> }}\n<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
+        val cleanString = HtmlAnnotator().removeElementsFromString("<blink></blink>\n{{! <blink></blink> }}\n<blink></blink>\n{{! <blink></blink> }}", "\\{\\{!", "\\}\\}")
         assertEquals("<blink></blink>\n" +
                 "                      \n" +
                 "<blink></blink>\n" +
@@ -43,7 +43,7 @@ internal class HtmlAnnotatorTest {
     }
     @Test
     fun removeCommentsFromStringHandlebars2() {
-        val cleanString = HtmlAnnotator().removeCommentsFromString("<blink></blink>\n{{!-- <blink></blink> --}}", "\\{\\{!\\-\\-", "\\-\\-\\}\\}")
+        val cleanString = HtmlAnnotator().removeElementsFromString("<blink></blink>\n{{!-- <blink></blink> --}}", "\\{\\{!\\-\\-", "\\-\\-\\}\\}")
         assertEquals("<blink></blink>\n" +
                 "                          ", cleanString)
     }

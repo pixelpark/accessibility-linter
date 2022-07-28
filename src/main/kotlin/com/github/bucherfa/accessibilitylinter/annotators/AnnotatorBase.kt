@@ -122,7 +122,7 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
         return fileName.split('.').last()
     }
 
-    fun removeCommentsFromString(string: String, startIndicator: String, endIndicator: String): String {
+    fun removeElementsFromString(string: String, startIndicator: String, endIndicator: String): String {
         var result = string
         val regex = Regex("$startIndicator.*?$endIndicator")
         val occasions = regex.findAll(string)
@@ -137,10 +137,10 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
         return result
     }
 
-    fun removeMultipleCommentsFromString(input: String, list: List<Pair<String, String>>): String {
+    fun removeMultipleElementsFromString(input: String, list: List<Pair<String, String>>): String {
         var output = input
         for (commentStartEnd in list) {
-            output = removeCommentsFromString(
+            output = removeElementsFromString(
                 output,
                 commentStartEnd.first,
                 commentStartEnd.second
@@ -165,7 +165,7 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
             else -> return null
         }
         for (commentStartEnd in commentStartEndList) {
-            output = removeCommentsFromString(
+            output = removeElementsFromString(
                 output,
                 commentStartEnd.first,
                 commentStartEnd.second
