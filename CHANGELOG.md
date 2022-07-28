@@ -8,11 +8,13 @@
 - tags from axe-linter.yml are now respected
 - JavaScript: function tests init + communication tests improved
 - Readme: instructions for config file
+- Readme: development + deployment steps
 
 ### Changed
 - Annotator structure (abstract class)
 - ConfigAxe: properties are optional
 - ConfigAxe: now ignores undefined properties
+- Targeting the newest IntelliJ releases
 
 ### Fixed
 - Handlebars: filter out all handlebars syntax
