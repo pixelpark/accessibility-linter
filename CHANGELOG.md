@@ -14,10 +14,10 @@
 - Annotator structure (abstract class)
 - ConfigAxe: properties are optional
 - ConfigAxe: now ignores undefined properties
-- Targeting the newest IntelliJ releases
 
 ### Fixed
 - Handlebars: filter out all handlebars syntax
+- AnnotatorBase: potentially fix path issues for the config files for windows
 
 ## [0.2.0]
 ### Added

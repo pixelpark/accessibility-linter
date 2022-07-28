@@ -87,7 +87,7 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
             val configFilePath = configFile.path
             val projectPath = file.project.basePath
             val configFileName = configFile.name
-            if (!projectPath.isNullOrEmpty() && Path.of(projectPath, configFileName).toString() == configFilePath) {
+            if (!projectPath.isNullOrEmpty() && Path.of(projectPath, configFileName).equals(Path.of(configFilePath))) {
                 val mapper = ObjectMapper(YAMLFactory())
                 return try {
                     mapper.readValue(Path.of(configFile.path).toFile(), ConfigAxe::class.java)
