@@ -31,3 +31,5 @@ factory.create().languagePlugin.onMessage(
     JSON.stringify({ seq: 1, arguments: { input, config } }),
     new class { write(msg) { console.log(JSON.stringify(JSON.parse(msg), null, 2)) }}
 );
+
+console.log(factory.create().languagePlugin.getAvailableTags().sort())

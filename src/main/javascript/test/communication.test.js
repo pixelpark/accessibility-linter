@@ -33,7 +33,7 @@ test('Missing Config', done => {
 
 test('Missing rules from Config', done => {
     const ah = new AnswerHandler(() => {
-        expect(ah.message.error).toBe('rules from config missing');
+        expect(ah.message.error).toBeUndefined();
         done();
     });
     languagePlugin.onMessage(JSON.stringify({ seq: 1, arguments: { input: '<blink></blink>', config: {} } }), ah);
@@ -55,10 +55,19 @@ test('Should have one violation', done => {
     languagePlugin.onMessage(JSON.stringify({ seq: 1, arguments: { input: '<blink></blink>', config: { rules: {} } } }), ah);
 });
 
-test('Should have zero violations', done => {
+test('Should have zero violations (rule)', done => {
     const ah = new AnswerHandler(() => {
         expect(ah.message.result.length).toBe(0);
         done();
     });
     languagePlugin.onMessage(JSON.stringify({ seq: 1, arguments: { input: '<blink></blink>', config: { rules: { blink: false } } } }), ah);
+});
+
+test('Should have zero violations (tag)', done => {
+    const ah = new AnswerHandler(() => {
+        console.log(ah.message)
+        expect(ah.message.result.length).toBe(0);
+        done();
+    });
+    languagePlugin.onMessage(JSON.stringify({ seq: 1, arguments: { input: '<blink></blink>', config: { tags: ['wcag2aa'] } } }), ah);
 });

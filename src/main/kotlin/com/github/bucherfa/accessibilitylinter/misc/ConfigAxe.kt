@@ -1,13 +1,18 @@
 package com.github.bucherfa.accessibilitylinter.misc
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 class ConfigAxe {
-    val rules: Map<String, Boolean>
-    val tags: MutableList<String>
+    val rules: Map<String, Boolean>?
+    val tags: List<String>?
+
     constructor() {
-        this.rules = mapOf()
-        this.tags = mutableListOf()
+        this.rules = null
+        this.tags = null
     }
-    constructor(rules: Map<String, Boolean>, tags: MutableList<String>) {
+
+    constructor(rules: Map<String, Boolean>?, tags: List<String>?) {
         this.rules = rules
         this.tags = tags
     }

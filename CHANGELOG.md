@@ -5,9 +5,13 @@
 ## [Unreleased]
 ### Added
 - Support for `vue` files
+- tags from axe-linter.yml are now respected
+- JavaScript: function tests init + communication tests improved
 
 ### Changed
 - Annotator structure (abstract class)
+- ConfigAxe: properties are optional
+- ConfigAxe: now ignores undefined properties
 
 ### Fixed
 - Handlebars: filter out all handlebars syntax
