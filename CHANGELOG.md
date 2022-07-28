@@ -7,6 +7,7 @@
 - Support for `vue` files
 - tags from axe-linter.yml are now respected
 - JavaScript: function tests init + communication tests improved
+- Readme: instructions for config file
 
 ### Changed
 - Annotator structure (abstract class)
