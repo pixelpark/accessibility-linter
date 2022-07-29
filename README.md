@@ -19,7 +19,7 @@ Features:
 Configuration File:
 
 At the root directory of your project you can place a file called `axe-linter.yml`.
-With the `rules` property you can enable or disable rules and with the `tags` property you can enable only rules with the specific tags. All other rules will be disabled, even they are enabled through the `rules` property.
+With the `rules` property you can enable or disable rules and with the `tags` property you can enable only rules with the specific tags. All other rules will be disabled, even when they are enabled through the `rules` property.
 
 [List of all available rules including their tags](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md)
 
