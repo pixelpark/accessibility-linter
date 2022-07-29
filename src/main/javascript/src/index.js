@@ -21,53 +21,15 @@ class AccessibilityLinterPlugin {
                 input,
                 { includeNodeLocations: true }
             );
-            const document = dom.window.document;
             const options = this.prepareOptions(request.arguments.config)
             axe.run(
                 dom.window.document.documentElement,
                 options
             ).then(results => {
-                const mapping = {};
-                const data = [];
-                for (const rule of results) {
-                    for (const violation of rule.violations) {
-                        const type = rule.id;
-                        if (typeof mapping[type] === 'undefined') {
-                            mapping[type] = data.length;
-                            const entry = {};
-                            entry.type = type;
-                            entry.help = rule.help;
-                            entry.helpUrl = rule.helpUrl;
-                            entry.occasions = [];
-                            data.push(entry);
-                        }
-                        for (const selector of violation.node.selector) {
-                            const element = document.querySelector(selector);
-                            const location = dom.nodeLocation(element);
-                            if (location !== null) {
-                                const startOffset = location.startOffset;
-                                let endOffset = location.endOffset;
-                                const startTag = location.startTag;
-                                if (location.startLine !== location.endLine) {
-                                    endOffset = startTag.endOffset;
-                                }
-                                if (startTag.startLine !== startTag.endLine) {
-                                    endOffset = input.indexOf('\n', startOffset) - 1;
-                                }
-                                data[mapping[type]].occasions.push({
-                                    startOffset,
-                                    endOffset
-                                });
-                            }
-                        }
-                    }
-                }
-                const violationsWithOccasions = data.filter(
-                    violation => violation.occasions.length > 0
-                )
+                const data = this.processResults(results, input, dom)
                 messageWriter.write(JSON.stringify({
                     request_seq: request.seq,
-                    result: violationsWithOccasions
+                    result: data
                 }));
             })
             .catch(e => {
@@ -131,6 +93,56 @@ class AccessibilityLinterPlugin {
             axe.getRules()
                 .flatMap(rule => rule.tags)
         )];
+    }
+    processResults(results, input, dom) {
+        const data = [];
+        const mapping = {};
+        for (const rule of results) {
+            for (const violation of rule.violations) {
+                const type = rule.id;
+                if (typeof mapping[type] === 'undefined') {
+                    mapping[type] = data.length;
+                    data.push(this.createResultEntry(rule));
+                }
+                const occasions = this.processOccasions(violation, input, dom)
+                data[mapping[type]].occasions.push(...occasions);
+            }
+        }
+        return data.filter(
+            violation => violation.occasions.length > 0
+        );
+    }
+    createResultEntry(rule) {
+        return {
+            type: rule.id,
+            help: rule.help,
+            helpUrl: rule.helpUrl,
+            occasions: []
+        };
+    }
+    processOccasions(violation, input, dom) {
+        const document = dom.window.document;
+        const occasions = [];
+        for (const selector of violation.node.selector) {
+            const element = document.querySelector(selector);
+            const location = dom.nodeLocation(element);
+            if (location !== null) {
+                const startOffset = location.startOffset;
+                let endOffset = location.endOffset;
+                const startTag = location.startTag;
+                if (location.startLine !== location.endLine) {
+                    endOffset = startTag.endOffset;
+                }
+                if (startTag.startLine !== startTag.endLine) {
+                    endOffset = input.indexOf('\n', startOffset) - 1;
+                }
+                occasions.push({
+                    startOffset,
+                    endOffset
+                });
+            }
+        }
+        return occasions;
     }
 }
 

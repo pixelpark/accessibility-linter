@@ -65,7 +65,6 @@ test('Should have zero violations (rule)', done => {
 
 test('Should have zero violations (tag)', done => {
     const ah = new AnswerHandler(() => {
-        console.log(ah.message)
         expect(ah.message.result.length).toBe(0);
         done();
     });
