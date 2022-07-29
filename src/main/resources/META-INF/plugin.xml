@@ -23,6 +23,7 @@
                 implementationClass="com.github.bucherfa.accessibilitylinter.annotators.VueAnnotator"
         />
         <projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.LinterService"/>
+        <!--projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.PerformanceService"/-->
     </extensions>
 
     <applicationListeners>
