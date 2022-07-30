@@ -134,7 +134,7 @@ class AccessibilityLinterPlugin {
                     endOffset = startTag.endOffset;
                 }
                 if (startTag.startLine !== startTag.endLine) {
-                    endOffset = input.indexOf('\n', startOffset) - 1;
+                    endOffset = input.indexOf('\n', startOffset);
                 }
                 occasions.push({
                     startOffset,

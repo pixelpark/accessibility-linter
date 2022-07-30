@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 ### Added
+- class to collect performance measurements
+
+### Changed
+- JavaScript: split into more functions
+
+### Fixed
+- JavaScript: highlighting for annotations that end on a new line
+
+## [0.2.1]
+### Added
 - Support for `vue` files
 - tags from axe-linter.yml are now respected
 - JavaScript: function tests init + communication tests improved
