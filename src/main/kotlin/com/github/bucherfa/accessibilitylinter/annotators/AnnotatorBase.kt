@@ -21,8 +21,10 @@ class CollectedInformation(val input: String, val config: ConfigAxe, val linterS
 
 abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<CustomAnnotation>>() {
 
-    var fileStartingOffset = 0
     abstract val fileTypes:  List<String>
+    abstract fun prepareInput(input: String): String?
+
+    var fileStartingOffset = 0
 
     override fun collectInformation(file: PsiFile, editor: Editor, hasErrors: Boolean): CollectedInformation? {
         println("Starting...")
@@ -140,31 +142,6 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
     fun removeMultipleElementsFromString(input: String, list: List<Pair<String, String>>): String {
         var output = input
         for (commentStartEnd in list) {
-            output = removeElementsFromString(
-                output,
-                commentStartEnd.first,
-                commentStartEnd.second
-            )
-        }
-        return output
-    }
-
-    abstract fun prepareInput(input: String): String?
-
-    fun prepareInput2(fileType: String, input: String): String? {
-        var output = input
-        val commentStartEndList: List<Pair<String, String>> = when (fileType) {
-            "html", "htm" -> listOf()
-            "hbs", "handlebars" -> {
-                listOf(
-                    Pair("\\{\\{!\\-\\-", "\\-\\-\\}\\}"),
-                    Pair("\\{\\{!", "\\}\\}"),
-                )
-                //removeCommentsFromString(input, "\\{\\{!", "\\}\\}")
-            }
-            else -> return null
-        }
-        for (commentStartEnd in commentStartEndList) {
             output = removeElementsFromString(
                 output,
                 commentStartEnd.first,
