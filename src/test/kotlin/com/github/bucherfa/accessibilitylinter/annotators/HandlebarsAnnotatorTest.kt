@@ -9,4 +9,14 @@ internal class HandlebarsAnnotatorTest {
         val actual = HandlebarsAnnotator().prepareInput("<div>Hello {{user}}!</div>")
         assertEquals("<div>Hello         !</div>", actual)
     }
+    @Test
+    fun prepareInputCommentWithinComment() {
+        val input = HandlebarsAnnotator().prepareInput("{{!-- {{!<blink></blink>}} --}}")
+        assertEquals("                               ", input)
+    }
+    @Test
+    fun prepareInputInvalidSyntax() {
+        val input = HandlebarsAnnotator().prepareInput("{{{{}}}}")
+        assertEquals("      }}", input)
+    }
 }

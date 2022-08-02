@@ -53,11 +53,6 @@ internal class HtmlAnnotatorTest {
         val input = HtmlAnnotator().prepareInput( "")
         assertEquals("", input)
     }
-//    @Test
-//    fun prepareInputHandlebarsCommentWithinComment() {
-//        val input = HtmlAnnotator().prepareInput("{{!-- {{!<blink></blink>}} --}}")
-//        assertEquals("                               ", input)
-//    }
     @Test
     fun prepareInputHtml() {
         val input = HtmlAnnotator().prepareInput("<html></html>")

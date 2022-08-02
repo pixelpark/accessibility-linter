@@ -20,8 +20,20 @@ class VueAnnotator : AnnotatorBase() {
             return null
         }
         fileStartingOffset = templateStartIndex + templateStart.length
-        return input
+        return removeColonSyntax(input
             .substringAfter(templateStart)
             .substringBeforeLast(templateEnd)
+        )
+    }
+
+    fun removeColonSyntax(input: String): String {
+        val regex = Regex(""":\S+=""")
+        val occasions = regex.findAll(input)
+        var result = input
+        for (occasion in occasions) {
+            val startIndex = occasion.range.first
+            result = result.replaceRange(startIndex, startIndex + 1, " ")
+        }
+        return result
     }
 }
