@@ -5,6 +5,8 @@
 ## [Unreleased]
 ### Added
 - class to collect performance measurements
+- VueAnnotator: filter out colon syntax
+- more Kotlin tests
 
 ### Changed
 - JavaScript: split into more functions
