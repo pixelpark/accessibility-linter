@@ -9,6 +9,7 @@
 - more Kotlin tests
 
 ### Changed
+- meta: IntelliJ versions
 - JavaScript: split into more functions
 
 ### Fixed
