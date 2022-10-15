@@ -3,6 +3,8 @@
 # accessibility-linter Changelog
 
 ## [Unreleased]
+
+## [0.2.2]
 ### Added
 - class to collect performance measurements
 - VueAnnotator: filter out colon syntax
