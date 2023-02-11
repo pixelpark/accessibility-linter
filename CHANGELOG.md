@@ -3,6 +3,10 @@
 # accessibility-linter Changelog
 
 ## [Unreleased]
+### Changed
+- meta: IntelliJ versions
+- javascript: update dependencies
+- meta: Java 17
 
 ## [0.2.2]
 ### Added
