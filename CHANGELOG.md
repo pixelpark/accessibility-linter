@@ -7,11 +7,11 @@
 ## 0.2.3 - 2023-02-11
 
 ### Changed
-- meta: IntelliJ versions
+- meta: IntelliJ versions (#2)
 - javascript: update dependencies
 - meta: Java 17
 
-## 0.2.2
+## 0.2.2 - 2022-10-15
 
 ### Added
 - class to collect performance measurements
@@ -25,7 +25,7 @@
 ### Fixed
 - JavaScript: highlighting for annotations that end on a new line
 
-## 0.2.1
+## 0.2.1 - 2022-07-28
 
 ### Added
 - Support for `vue` files
@@ -43,7 +43,7 @@
 - Handlebars: filter out all handlebars syntax
 - AnnotatorBase: potentially fix path issues for the config files for windows
 
-## 0.2.0
+## 0.2.0 - 2022-07-23
 
 ### Added
 - Unit tests for JavaScript and Kotlin functions
@@ -59,7 +59,7 @@
 ### Fixed
 - replacing deprecated functions
 
-## 0.1.1
+## 0.1.1 - 2022-07-07
 
 ### Added
 - Initial creation of a linting toolchain
