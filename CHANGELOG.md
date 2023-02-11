@@ -2,13 +2,17 @@
 
 # accessibility-linter Changelog
 
-## [Unreleased]
+## Unreleased
+
+## 0.2.3 - 2023-02-11
+
 ### Changed
 - meta: IntelliJ versions
 - javascript: update dependencies
 - meta: Java 17
 
-## [0.2.2]
+## 0.2.2
+
 ### Added
 - class to collect performance measurements
 - VueAnnotator: filter out colon syntax
@@ -21,7 +25,8 @@
 ### Fixed
 - JavaScript: highlighting for annotations that end on a new line
 
-## [0.2.1]
+## 0.2.1
+
 ### Added
 - Support for `vue` files
 - tags from axe-linter.yml are now respected
@@ -38,7 +43,8 @@
 - Handlebars: filter out all handlebars syntax
 - AnnotatorBase: potentially fix path issues for the config files for windows
 
-## [0.2.0]
+## 0.2.0
+
 ### Added
 - Unit tests for JavaScript and Kotlin functions
 - Support for `handlebars` files
@@ -53,7 +59,8 @@
 ### Fixed
 - replacing deprecated functions
 
-## [0.1.1]
+## 0.1.1
+
 ### Added
 - Initial creation of a linting toolchain
 - Preparation for initial release to the plugin store
