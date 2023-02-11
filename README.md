@@ -58,7 +58,20 @@ To apply JavaScript changes for local debugging, run the `build > clean` gradle 
 
 ## Deployment
 
-The GitHub Action deployment currently doesn't work, because running `npm install --only=production` hasn't been automated yet. The release task fails as intended, since the [environment variables](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables) haven't been set.
+### Semi-Automatic
+
+1. set the new version number in `gradle.properties`
+2. commit and push
+3. wait for the GitHub Actions successfully finish running, if they fail: fix the errors and start over (depending on what went wrong)
+4. Locate the [draft release on GitHub](https://github.com/bucherfa/accessibility-linter/releases)
+5. Turn into a pre-release (This will upload the plugin to the [marketplace](https://plugins.jetbrains.com/plugin/19498-accessibility-linter) and to this pre-release; and create a [pull request](https://github.com/bucherfa/accessibility-linter/pulls) for the changelog)
+
+once the plugin version was approved by JetBrains...
+
+1. Merge the generated [pull request](https://github.com/bucherfa/accessibility-linter/pulls)
+2. Turn the pre-release into a full release
+
+### Manual
 
 1. navigate to `src/main/javascript`
 2. run `npm install --only=production`
