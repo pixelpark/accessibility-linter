@@ -20,12 +20,24 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name }}
 
-      # Setup Java 11 environment for the next steps
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 18
+
+      # Install Node.js dependencies
+      - name: Install dependencies
+        run: |
+          cd ${{ github.workspace }}/src/main/javascript
+          npm install --only=production
+
+      # Setup Java 17 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
           cache: gradle
 
       # Set environment variables

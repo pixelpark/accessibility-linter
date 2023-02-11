@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: 18
 
-      # Setup Node.js
+      # Install Node.js dependencies
       - name: Install dependencies
         run: |
           cd ${{ github.workspace }}/src/main/javascript
