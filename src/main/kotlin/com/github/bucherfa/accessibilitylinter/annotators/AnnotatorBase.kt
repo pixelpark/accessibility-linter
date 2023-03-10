@@ -74,7 +74,10 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
                         "(<a href=\"${annotation.url}\">${annotation.type}</a>)" +
                         "</body></html>"
                 val message = "Accessibility Linter: ${annotation.message} (${annotation.type})"
-                holder.createAnnotation(HighlightSeverity.WARNING, annotation.range, message, htmlTooltip)
+                holder.newAnnotation(HighlightSeverity.WARNING, message)
+                    .range(annotation.range)
+                    .tooltip(htmlTooltip)
+                    .create()
             }
         }
         println("... finished")
