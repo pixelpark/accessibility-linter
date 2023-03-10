@@ -4,6 +4,11 @@
 
 ## Unreleased
 
+### Changed
+- update Gradle IntelliJ Plugin
+- replace deprecated function `createAnnotation`
+- remove `MyProjectManagerListener` due to deprecation of `projectOpened`
+
 ## 0.2.3 - 2023-02-11
 
 ### Changed
