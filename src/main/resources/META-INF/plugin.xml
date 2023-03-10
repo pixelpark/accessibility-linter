@@ -25,9 +25,4 @@
         <projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.LinterService"/>
         <!--projectService serviceImplementation="com.github.bucherfa.accessibilitylinter.services.PerformanceService"/-->
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.bucherfa.accessibilitylinter.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
 </idea-plugin>
