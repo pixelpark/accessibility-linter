@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ github.workspace }}/src/main/javascript
-          npm install --only=production
+          npm install --omit=dev
 
       # Validate wrapper
       - name: Gradle Wrapper Validation

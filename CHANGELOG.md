@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- ci: replace deprecated `npm install` flag
+
 ## 0.2.4 - 2023-03-10
 
 ### Changed

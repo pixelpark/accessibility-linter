@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ github.workspace }}/src/main/javascript
-          npm install --only=production
+          npm install --omit=dev
 
       # Setup Java 17 environment for the next steps
       - name: Setup Java

@@ -74,7 +74,7 @@ once the plugin version was approved by JetBrains...
 ### Manual
 
 1. navigate to `src/main/javascript`
-2. run `npm install --only=production`
+2. run `npm install --omit=dev`
 3. set the new version number in `gradle.properties`
 4. commit and push
 5. run the `build > clean` gradle task
