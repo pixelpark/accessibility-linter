@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+## 0.2.4 - 2023-03-10
+
 ### Changed
 - update Gradle IntelliJ Plugin
 - replace deprecated function `createAnnotation`
