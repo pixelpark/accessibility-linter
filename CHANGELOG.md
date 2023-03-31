@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- meta: IntelliJ versions
 - ci: replace deprecated `npm install` flag
 - ci: update pipelines from template repo
 - ci: update `setup-node` action
