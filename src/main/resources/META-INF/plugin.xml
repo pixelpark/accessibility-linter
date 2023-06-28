@@ -2,7 +2,7 @@
 <idea-plugin url="https://github.com/bucherfa/accessibility-linter/">
     <id>com.github.bucherfa.accessibilitylinter</id>
     <name>Accessibility Linter</name>
-    <vendor url="https://github.com/bucherfa">Fabian Bucher</vendor>
+    <vendor url="https://digitaspixelpark.com">digitaspixelpark</vendor>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>JavaScript</depends>
