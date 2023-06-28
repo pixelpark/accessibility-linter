@@ -4,12 +4,16 @@
 
 ## Unreleased
 
+### Changed
+- meta: change vendor information
+
 ## 0.2.5 - 2023-03-31
+
+### Changed
 - meta: IntelliJ versions
 - ci: replace deprecated `npm install` flag
 - ci: update pipelines from template repo
 - ci: update `setup-node` action
-- meta: change vendor information
 
 ## 0.2.4 - 2023-03-10
 
