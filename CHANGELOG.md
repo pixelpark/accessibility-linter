@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+## 0.2.5 - 2023-03-31
 - meta: IntelliJ versions
 - ci: replace deprecated `npm install` flag
 - ci: update pipelines from template repo
