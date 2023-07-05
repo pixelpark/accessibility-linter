@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+### Changed
+- javascript: update dependencies
+
 ## 0.2.6 - 2023-06-28
 
 ### Changed

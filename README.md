@@ -61,10 +61,11 @@ To apply JavaScript changes for local debugging, run the `build > clean` gradle 
 ### Semi-Automatic
 
 1. set the new version number in `gradle.properties`
-2. commit and push
-3. wait for the GitHub Actions successfully finish running, if they fail: fix the errors and start over (depending on what went wrong)
-4. Locate the [draft release on GitHub](https://github.com/bucherfa/accessibility-linter/releases)
-5. Turn into a pre-release (This will upload the plugin to the [marketplace](https://plugins.jetbrains.com/plugin/19498-accessibility-linter) and to this pre-release; and create a [pull request](https://github.com/bucherfa/accessibility-linter/pulls) for the changelog)
+2. update changelog
+3. commit and push
+4. wait for the GitHub Actions successfully finish running, if they fail: fix the errors and start over (depending on what went wrong)
+5. Locate the [draft release on GitHub](https://github.com/bucherfa/accessibility-linter/releases)
+6. Turn into a pre-release (This will upload the plugin to the [marketplace](https://plugins.jetbrains.com/plugin/19498-accessibility-linter) and to this pre-release; and create a [pull request](https://github.com/bucherfa/accessibility-linter/pulls) for the changelog)
 
 once the plugin version was approved by JetBrains...
 
