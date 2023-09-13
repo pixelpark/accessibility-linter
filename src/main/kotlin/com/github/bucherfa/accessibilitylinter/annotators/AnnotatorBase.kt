@@ -56,7 +56,7 @@ abstract class AnnotatorBase : ExternalAnnotator<CollectedInformation, List<Cust
         )
         var annotations: List<CustomAnnotation> = mutableListOf()
         if (response != null) {
-            val element = response.get().element
+            val element = response.get()!!.element
             val result = element.getAsJsonArray("result")
             annotations = processResult(result)
         }

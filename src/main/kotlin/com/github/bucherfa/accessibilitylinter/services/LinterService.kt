@@ -6,7 +6,7 @@ import com.intellij.lang.javascript.service.protocol.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.Consumer
 import com.intellij.util.EmptyConsumer
-import java.util.concurrent.Future
+import java.util.concurrent.CompletableFuture
 
 class LinterService(project: Project) :
     JSLanguageServiceBase(project) {
@@ -21,7 +21,7 @@ class LinterService(project: Project) :
 
     override fun needInitToolWindow() = false
 
-    fun runRequest(input: String, config: ConfigAxe): Future<JSLanguageServiceAnswer>? {
+    fun runRequest(input: String, config: ConfigAxe): CompletableFuture<JSLanguageServiceAnswer?>? {
         return sendCommand(SimpleCommand(input, config)) { _, answer ->
             answer
         }
