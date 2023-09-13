@@ -6,7 +6,6 @@
 
 ### Changed
 - meta: IntelliJ versions
-- meta: update Gradle IntelliJ Plugin
 
 ## 0.2.7 - 2023-07-05
 
