@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Changed
+- javascript: update dependencies
+- javascript: update to axe-core 4.8.2
+
 ## 0.2.8 - 2023-11-07
 
 ### Changed
