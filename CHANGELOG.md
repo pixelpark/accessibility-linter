@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+### Changed
+- meta: IntelliJ versions
+
 ## 0.2.9 - 2023-11-08
 
 ### Changed
