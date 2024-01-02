@@ -1,6 +1,6 @@
 # accessibility-linter
 
-![Build](https://github.com/bucherfa/accessibility-linter/workflows/Build/badge.svg)
+![Build](https://github.com/pixelpark/accessibility-linter/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/19498.svg)](https://plugins.jetbrains.com/plugin/19498-accessibility-linter/)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/19498.svg)](https://plugins.jetbrains.com/plugin/19498-accessibility-linter/)
 
