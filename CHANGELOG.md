@@ -4,6 +4,12 @@
 
 ## Unreleased
 
+## 0.2.11 - 2024-01-22
+
+### Changed
+- update Gradle IntelliJ Plugin to 1.16.1
+- update Gradle Version to 8.5
+
 ## 0.2.10 - 2023-12-11
 
 ### Changed
