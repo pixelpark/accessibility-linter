@@ -4,11 +4,14 @@
 
 ## Unreleased
 
-## 0.2.11 - 2024-01-22
-
 ### Changed
+- meta: IntelliJ versions
+- javascript: update dependencies
+- javascript: update to axe-core 4.9.0
+- javascript: update to jsdom 24.0.0
 - update Gradle IntelliJ Plugin to 1.16.1
 - update Gradle Version to 8.5
+
 
 ## 0.2.10 - 2023-12-11
 
