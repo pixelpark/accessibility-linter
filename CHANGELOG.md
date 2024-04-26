@@ -4,6 +4,13 @@
 
 ## Unreleased
 
+### Changed
+- meta: IntelliJ versions
+- javascript: update dependencies
+- javascript: update to axe-core 4.9.0
+- javascript: update to jsdom 24.0.0
+
+
 ## 0.2.10 - 2023-12-11
 
 ### Changed
