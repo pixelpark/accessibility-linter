@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axe-core": "^4.9.0",
-    "jsdom": "^24.0.0"
+    "axe-core": "^4.9.1",
+    "jsdom": "^24.1.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"

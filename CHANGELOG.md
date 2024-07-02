@@ -4,6 +4,11 @@
 
 ## Unreleased
 
+### Changed
+- javascript: update dependencies, security updates
+- javascript: update to axe-core 4.9.1
+- javascript: update to jsdom 24.1.0
+
 ## 0.2.11 - 2024-04-26
 
 ### Changed
