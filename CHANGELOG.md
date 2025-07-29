@@ -6,6 +6,15 @@
 
 ### Changed
 - javascript: update dependencies, security updates
+- javascript: update to axe-core 4.10.3
+- javascript: update to jsdom 26.1.0
+- meta: IntelliJ versions
+- ci: update node version to 22
+
+## 0.2.12 - 2024-07-02
+
+### Changed
+- javascript: update dependencies, security updates
 - javascript: update to axe-core 4.9.1
 - javascript: update to jsdom 24.1.0
 
